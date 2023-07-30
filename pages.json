@@ -1,14 +1,25 @@
 {
 	"pages": [{
-		"path": "pages/index/index",
-		"style": {
-			"navigationBarTitleText": "uni-app"
-		}
+		"path": "pages/home/home",
+		"style": {}
+
+	}, {
+		"path": "pages/cart/cart",
+		"style": {}
+
+	}, {
+		"path": "pages/cate/cate",
+		"style": {}
+
+	}, {
+		"path": "pages/my/my",
+		"style": {}
+
 	}],
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "黑马优购",
+		"navigationBarBackgroundColor": "#c00000",
 		"backgroundColor": "#F8F8F8",
 		"app-plus": {
 			"background": "#efeff4"
