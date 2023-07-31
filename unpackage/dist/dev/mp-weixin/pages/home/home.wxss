@@ -17,3 +17,24 @@ swiper image {
   width: 128rpx;
   height: 140rpx;
 }
+.floor-item {
+  margin-top: 20rpx;
+}
+.floor-item .floor-title {
+  width: 100%;
+  height: 60rpx;
+}
+.floor-item .floor-img-box {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 232rpx);
+  padding: 0 10rpx;
+  gap: 10rpx;
+}
+.floor-item .floor-img-box .floor-img > image {
+  width: 100%;
+  height: 100%;
+}
+.floor-item .floor-img-box .floor-img:nth-child(1) {
+  grid-row: 1/3;
+}

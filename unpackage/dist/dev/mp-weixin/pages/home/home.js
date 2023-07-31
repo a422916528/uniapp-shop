@@ -26,9 +26,22 @@ const _sfc_main = {
         });
       }
     };
+    const floorList = common_vendor.ref([]);
+    const getFloorList = async () => {
+      const { data: res } = await utils_request.request.get("/api/public/v1/home/floordata");
+      if (res.meta.status !== 200)
+        return common_vendor.index.$showMsg();
+      res.message.forEach((item) => {
+        item.product_list.forEach((prod) => {
+          prod.url = "/subpkg/goods_list/goods_list?" + prod.navigator_url.split("?")[1];
+        });
+      });
+      floorList.value = res.message;
+    };
     common_vendor.onReady(() => {
       getSwiperList();
       getNavList();
+      getFloorList();
     });
     return (_ctx, _cache) => {
       return {
@@ -44,6 +57,19 @@ const _sfc_main = {
             a: item.image_src,
             b: item.image_src,
             c: common_vendor.o(($event) => navHandler(item), item.image_src)
+          };
+        }),
+        c: common_vendor.f(floorList.value, (item, k0, i0) => {
+          return {
+            a: item.floor_title.image_src,
+            b: common_vendor.f(item.product_list, (val, k1, i1) => {
+              return {
+                a: val.image_src,
+                b: val.image_src,
+                c: val.url
+              };
+            }),
+            c: item.floor_title.image_src
           };
         })
       };
