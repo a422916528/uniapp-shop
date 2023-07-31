@@ -6,6 +6,7 @@ if (!Math) {
   "./pages/cart/cart.js";
   "./pages/cate/cate.js";
   "./pages/my/my.js";
+  "./subpkg/goods_detail/goods_detail.js";
 }
 const _sfc_main = {
   onLaunch: function() {
@@ -20,6 +21,8 @@ const _sfc_main = {
   }
 };
 const App = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__file", "D:/Web/WeChat/uniapp-shop/App.vue"]]);
+require("./vue-devtools/hook.js");
+require("./vue-devtools/backend.js");
 function createApp() {
   const app = common_vendor.createSSRApp(App);
   return {

@@ -1,1 +1,1 @@
-<view>Home</view>
+<view><swiper indicator-dots="{{true}}" autoplay="{{true}}" interval="{{3000}}" duration="{{500}}" circular="{{true}}"><swiper-item wx:for="{{a}}" wx:for-item="item" wx:key="c"><navigator class="swiper-item" url="{{item.b}}"><image src="{{item.a}}" mode=""></image></navigator></swiper-item></swiper></view>
