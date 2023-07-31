@@ -7,18 +7,28 @@ const _sfc_main = {
     const swiperList = common_vendor.ref([]);
     const getSwiperList = async () => {
       const { data: res } = await utils_request.request.get("/api/public/v1/home/swiperdata");
-      console.log(res);
       if (res.meta.status !== 200) {
-        return common_vendor.index.showToast({
-          title: "数据请求失败",
-          icon: "none",
-          duration: 1500
-        });
+        return common_vendor.index.$showMsg();
       }
       swiperList.value = res.message;
     };
+    const navList = common_vendor.ref([]);
+    const getNavList = async () => {
+      const { data: res } = await utils_request.request.get("/api/public/v1/home/catitems");
+      if (res.meta.status !== 200)
+        return common_vendor.index.$showMsg();
+      navList.value = res.message;
+    };
+    const navHandler = (item) => {
+      if (item.name === "分类") {
+        common_vendor.index.switchTab({
+          url: "/pages/cate/cate"
+        });
+      }
+    };
     common_vendor.onReady(() => {
       getSwiperList();
+      getNavList();
     });
     return (_ctx, _cache) => {
       return {
@@ -27,6 +37,13 @@ const _sfc_main = {
             a: item.image_src,
             b: `/subpkg/goods_detail/goods_detail?goods_id=${item.goods_id}`,
             c: item.goods_id
+          };
+        }),
+        b: common_vendor.f(navList.value, (item, k0, i0) => {
+          return {
+            a: item.image_src,
+            b: item.image_src,
+            c: common_vendor.o(($event) => navHandler(item), item.image_src)
           };
         })
       };
