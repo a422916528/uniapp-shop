@@ -7,6 +7,28 @@ function makeMap(str, expectsLowerCase) {
   }
   return expectsLowerCase ? (val) => !!map[val.toLowerCase()] : (val) => !!map[val];
 }
+const toDisplayString = (val) => {
+  return isString(val) ? val : val == null ? "" : isArray(val) || isObject(val) && (val.toString === objectToString || !isFunction(val.toString)) ? JSON.stringify(val, replacer, 2) : String(val);
+};
+const replacer = (_key, val) => {
+  if (val && val.__v_isRef) {
+    return replacer(_key, val.value);
+  } else if (isMap(val)) {
+    return {
+      [`Map(${val.size})`]: [...val.entries()].reduce((entries, [key, val2]) => {
+        entries[`${key} =>`] = val2;
+        return entries;
+      }, {})
+    };
+  } else if (isSet(val)) {
+    return {
+      [`Set(${val.size})`]: [...val.values()]
+    };
+  } else if (isObject(val) && !isArray(val) && !isPlainObject(val)) {
+    return String(val);
+  }
+  return val;
+};
 const EMPTY_OBJ = Object.freeze({});
 const EMPTY_ARR = Object.freeze([]);
 const NOOP = () => {
@@ -415,9 +437,9 @@ function assertType$1(value, type) {
   let valid;
   const expectedType = getType$1(type);
   if (isSimpleType$1(expectedType)) {
-    const t = typeof value;
-    valid = t === expectedType.toLowerCase();
-    if (!valid && t === "object") {
+    const t2 = typeof value;
+    valid = t2 === expectedType.toLowerCase();
+    if (!valid && t2 === "object") {
       valid = value instanceof type;
     }
   } else if (expectedType === "Object") {
@@ -1500,158 +1522,6 @@ var protocols = /* @__PURE__ */ Object.freeze({
 });
 const wx$1 = initWx();
 var index = initUni(shims, protocols, wx$1);
-function getTarget$1() {
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  if (typeof my !== "undefined") {
-    return my;
-  }
-}
-class Socket {
-  constructor(host2) {
-    this.sid = "";
-    this.ackTimeout = 5e3;
-    this.closed = false;
-    this._ackTimer = 0;
-    this._onCallbacks = {};
-    this.host = host2;
-    setTimeout(() => {
-      this.connect();
-    }, 50);
-  }
-  connect() {
-    this._socket = index.connectSocket({
-      url: `ws://${this.host}/socket.io/?EIO=4&transport=websocket`,
-      multiple: true,
-      complete(res) {
-      }
-    });
-    this._socket.onOpen((res) => {
-    });
-    this._socket.onMessage(({ data }) => {
-      if (typeof my !== "undefined") {
-        data = data.data;
-      }
-      if (typeof data !== "string") {
-        return;
-      }
-      if (data[0] === "0") {
-        this._send("40");
-        const res = JSON.parse(data.slice(1));
-        this.sid = res.sid;
-      } else if (data[0] + data[1] === "40") {
-        this.sid = JSON.parse(data.slice(2)).sid;
-        this._trigger("connect");
-      } else if (data === "3") {
-        this._send("2");
-      } else if (data === "2") {
-        this._send("3");
-      } else {
-        const match = /\[.*\]/.exec(data);
-        if (!match)
-          return;
-        try {
-          const [event, args] = JSON.parse(match[0]);
-          this._trigger(event, args);
-        } catch (err) {
-          console.error("Vue DevTools onMessage: ", err);
-        }
-      }
-    });
-    this._socket.onClose((res) => {
-      this.closed = true;
-      this._trigger("disconnect", res);
-    });
-    this._socket.onError((res) => {
-      console.error(res.errMsg);
-    });
-  }
-  on(event, callback) {
-    (this._onCallbacks[event] || (this._onCallbacks[event] = [])).push(callback);
-  }
-  emit(event, data) {
-    if (this.closed) {
-      return;
-    }
-    this._heartbeat();
-    this._send(`42${JSON.stringify(typeof data !== "undefined" ? [event, data] : [event])}`);
-  }
-  disconnect() {
-    clearTimeout(this._ackTimer);
-    if (this._socket && !this.closed) {
-      this._send("41");
-      this._socket.close({});
-    }
-  }
-  _heartbeat() {
-    clearTimeout(this._ackTimer);
-    this._ackTimer = setTimeout(() => {
-      this._socket && this._socket.send({ data: "3" });
-    }, this.ackTimeout);
-  }
-  _send(data) {
-    this._socket && this._socket.send({ data });
-  }
-  _trigger(event, args) {
-    const callbacks = this._onCallbacks[event];
-    if (callbacks) {
-      callbacks.forEach((callback) => {
-        callback(args);
-      });
-    }
-  }
-}
-let socketReadyCallback;
-getTarget$1().__VUE_DEVTOOLS_ON_SOCKET_READY__ = (callback) => {
-  socketReadyCallback = callback;
-};
-let targetHost = "";
-const hosts = "192.168.31.48,172.26.64.1".split(",");
-setTimeout(() => {
-  index.request({
-    url: `http://${"localhost"}:${9500}`,
-    timeout: 1e3,
-    success() {
-      targetHost = "localhost";
-      initSocket();
-    },
-    fail() {
-      if (!targetHost && hosts.length) {
-        hosts.forEach((host2) => {
-          index.request({
-            url: `http://${host2}:${9500}`,
-            timeout: 1e3,
-            success() {
-              if (!targetHost) {
-                targetHost = host2;
-                initSocket();
-              }
-            }
-          });
-        });
-      }
-    }
-  });
-}, 0);
-throwConnectionError();
-function throwConnectionError() {
-  setTimeout(() => {
-    if (!targetHost) {
-      throw new Error("未能获取局域网地址，本地调试服务不可用");
-    }
-  }, (hosts.length + 1) * 1100);
-}
-function initSocket() {
-  getTarget$1().__VUE_DEVTOOLS_SOCKET__ = new Socket(targetHost + ":8098");
-  socketReadyCallback();
-}
 const _export_sfc = (sfc, props) => {
   const target = sfc.__vccOpts || sfc;
   for (const [key, val] of props) {
@@ -4552,7 +4422,7 @@ function isSameType(a, b) {
 }
 function getTypeIndex(type, expectedTypes) {
   if (isArray(expectedTypes)) {
-    return expectedTypes.findIndex((t) => isSameType(t, type));
+    return expectedTypes.findIndex((t2) => isSameType(t2, type));
   } else if (isFunction(expectedTypes)) {
     return isSameType(expectedTypes, type) ? 0 : -1;
   }
@@ -4600,9 +4470,9 @@ function assertType(value, type) {
   let valid;
   const expectedType = getType(type);
   if (isSimpleType(expectedType)) {
-    const t = typeof value;
-    valid = t === expectedType.toLowerCase();
-    if (!valid && t === "object") {
+    const t2 = typeof value;
+    valid = t2 === expectedType.toLowerCase();
+    if (!valid && t2 === "object") {
       valid = value instanceof type;
     }
   } else if (expectedType === "Object") {
@@ -6008,6 +5878,7 @@ function vFor(source, renderItem) {
 }
 const o = (value, key) => vOn(value, key);
 const f = (source, renderItem) => vFor(source, renderItem);
+const t = (val) => toDisplayString(val);
 function createApp$1(rootComponent, rootProps = null) {
   rootComponent && (rootComponent.mpType = "app");
   return createVueApp(rootComponent, rootProps).use(plugin);
@@ -6185,13 +6056,6 @@ const HOOKS = [
 ];
 function parseApp(instance, parseAppOptions) {
   const internalInstance = instance.$;
-  {
-    Object.defineProperty(internalInstance.ctx, "$children", {
-      get() {
-        return getCurrentPages().map((page) => page.$vm);
-      }
-    });
-  }
   const appOptions = {
     globalData: instance.$options && instance.$options.globalData || {},
     $vm: instance,
@@ -6626,9 +6490,6 @@ function parseComponent(vueOptions, { parse, mocks: mocks2, isPage: isPage2, ini
     lifetimes: initLifetimes2({ mocks: mocks2, isPage: isPage2, initRelation: initRelation2, vueOptions }),
     pageLifetimes: {
       show() {
-        {
-          devtoolsComponentAdded(this.$vm.$);
-        }
         this.$vm && this.$vm.$callHook("onPageShow");
       },
       hide() {
@@ -6914,3 +6775,4 @@ exports.index = index;
 exports.o = o;
 exports.onReady = onReady;
 exports.ref = ref;
+exports.t = t;

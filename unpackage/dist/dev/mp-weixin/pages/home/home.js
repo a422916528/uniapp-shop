@@ -1,12 +1,13 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
-const utils_request = require("../../utils/request.js");
+require("../../utils/request.js");
+const api_home_index = require("../../api/home/index.js");
 const _sfc_main = {
   __name: "home",
   setup(__props) {
     const swiperList = common_vendor.ref([]);
     const getSwiperList = async () => {
-      const { data: res } = await utils_request.request.get("/api/public/v1/home/swiperdata");
+      const { data: res } = await api_home_index.getSwiper();
       if (res.meta.status !== 200) {
         return common_vendor.index.$showMsg();
       }
@@ -14,7 +15,7 @@ const _sfc_main = {
     };
     const navList = common_vendor.ref([]);
     const getNavList = async () => {
-      const { data: res } = await utils_request.request.get("/api/public/v1/home/catitems");
+      const { data: res } = await api_home_index.getCate();
       if (res.meta.status !== 200)
         return common_vendor.index.$showMsg();
       navList.value = res.message;
@@ -28,7 +29,7 @@ const _sfc_main = {
     };
     const floorList = common_vendor.ref([]);
     const getFloorList = async () => {
-      const { data: res } = await utils_request.request.get("/api/public/v1/home/floordata");
+      const { data: res } = await api_home_index.getFloor();
       if (res.meta.status !== 200)
         return common_vendor.index.$showMsg();
       res.message.forEach((item) => {
