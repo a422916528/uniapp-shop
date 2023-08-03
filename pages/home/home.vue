@@ -2,12 +2,13 @@
 	import request from '../../utils/request.js'
 	import { ref } from 'vue'
 	import { onReady } from '@dcloudio/uni-app'
+	import { getSwiper, getCate, getFloor } from '../../api/home/index.js'
 
 	// 存储轮播图
 	const swiperList = ref([])
 	// 获取轮播图数据
 	const getSwiperList = async () => {
-		const { data: res } = await request.get('/api/public/v1/home/swiperdata')
+		const { data: res } = await getSwiper()
 		if (res.meta.status !== 200) {
 			return uni.$showMsg()
 		}
@@ -18,7 +19,7 @@
 	const navList = ref([])
 	// 获取导航数据
 	const getNavList = async () => {
-		const { data: res } = await request.get('/api/public/v1/home/catitems')
+		const { data: res } = await getCate()
 		if (res.meta.status !== 200) return uni.$showMsg()
 		navList.value = res.message
 	}
@@ -36,7 +37,7 @@
 	const floorList = ref([])
 	// 获取楼层数据
 	const getFloorList = async () => {
-		const { data: res } = await request.get('/api/public/v1/home/floordata')
+		const { data: res } = await getFloor()
 		if (res.meta.status !== 200) return uni.$showMsg()
 		// 处理数据中的 url 地址
 		res.message.forEach((item) => {
