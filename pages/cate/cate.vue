@@ -2,6 +2,7 @@
 	import { getCateList } from '../../api/cate/index.js'
 	import { ref } from 'vue'
 	import { onReady } from '@dcloudio/uni-app'
+	import mySearch from '../../components/search/search.vue'
 	// 存储分类列表数据
 	const cateList = ref([])
 	// 存储二级分类数据
@@ -34,6 +35,8 @@
 </script>
 
 <template>
+	<!-- 搜索组件 -->
+	<my-search></my-search>
 	<view class="scroll-view-container">
 		<!-- 左侧滑动 -->
 		<scroll-view scroll-y="true" class="scroll-left">
@@ -73,9 +76,10 @@
 <style lang="scss" scoped>
 	.scroll-view-container {
 		display: flex;
+		padding-top: 50px;
 		.scroll-left {
 			width: 120px;
-			height: 100vh;
+			height: calc(100vh - 50px);
 			.scroll-left-item {
 				background-color: #f7f7f7;
 				line-height: 60px;
@@ -100,7 +104,7 @@
 		}
 		.scroll-right {
 			background-color: #fff;
-			height: 100vh;
+			height: calc(100vh - 50px);
 			.cate-lv2-title {
 				font-size: 12px;
 				font-weight: 700;

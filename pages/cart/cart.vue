@@ -1,13 +1,8 @@
-<template>
-	<view>Cart</view>
-</template>
-
-<script>
-export default {
-	data() {
-		return {}
-	}
-}
+<script setup>
+	import {} from 'vue'
+	import {} from '@dcloudio/uni-app'
 </script>
 
-<style lang="scss"></style>
+<template>cart</template>
+
+<style lang="scss" scoped></style>

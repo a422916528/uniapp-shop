@@ -3,6 +3,7 @@
 	import { ref } from 'vue'
 	import { onReady } from '@dcloudio/uni-app'
 	import { getSwiper, getCate, getFloor } from '../../api/home/index.js'
+	import mySearch from '../../components/search/search.vue'
 
 	// 存储轮播图
 	const swiperList = ref([])
@@ -59,6 +60,10 @@
 
 <template>
 	<view>
+		<!-- 搜索区域 -->
+		<view class="search-box">
+			<my-search></my-search>
+		</view>
 		<!-- 轮播图区域 -->
 		<swiper
 			:indicator-dots="true"
@@ -109,8 +114,14 @@
 </template>
 
 <style lang="scss">
+	.search-box {
+		position: fixed;
+		top: 0;
+		z-index: 999;
+	}
 	swiper {
 		height: 330rpx;
+		margin-top: 50px;
 		.swiper-item,
 		image {
 			width: 100%;
