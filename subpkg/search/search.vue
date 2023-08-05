@@ -1,5 +1,5 @@
 <script setup>
-	import { getSearchList } from '../../api/search/index.js'
+	import { getSearchList } from '/subpkg/subApi/search/index.js'
 	import { ref } from 'vue'
 	import { onLoad } from '@dcloudio/uni-app'
 	// 关键字存储

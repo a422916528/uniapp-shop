@@ -3,6 +3,6 @@
 	import {} from '@dcloudio/uni-app'
 </script>
 
-<template></template>
+<template>goods_detail</template>
 
 <style lang="scss" scoped></style>

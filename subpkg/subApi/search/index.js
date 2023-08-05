@@ -1,4 +1,4 @@
-import request from '../../utils/request.js'
+import request from '/utils/request.js'
 // 搜索建议接口
 const API = {
 	// 搜索建议
