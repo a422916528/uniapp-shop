@@ -1,10 +1,11 @@
 <script setup>
-	import { ref } from 'vue'
+	import { ref, watch } from 'vue'
 	import { onLoad } from '@dcloudio/uni-app'
 	import { reqGoodsDetail } from '/subpkg/subApi/goodsDetail/index.js'
+	import { useCartStore } from '/store/useCart.js'
+	const useCart = useCartStore()
 	// 商品详情信息
 	const goodsInfo = ref({})
-
 	// 获取商品详情请求
 	const getGoodsDetail = async (goodsId) => {
 		const { data: res } = await reqGoodsDetail(goodsId)
@@ -34,9 +35,17 @@
 		{
 			icon: 'cart',
 			text: '购物车',
-			info: 2
+			info: 0
 		}
 	])
+	// 监听购物车图标变化
+	watch(
+		() => useCart.total,
+		(newVal) => {
+			options.value[1].info = newVal || 0
+		},
+		{ immediate: true }
+	)
 	// 底部商品导航配置项
 	const buttonGroup = ref([
 		{
@@ -50,14 +59,37 @@
 			color: '#fff'
 		}
 	])
-	// 点击立即购买按钮回调
-	const onClick = () => {}
-	// 点击加入购物车按钮回调
-	const buttonClick = () => {
-		// 跳转到购物车页面
-		uni.switchTab({
-			url: '/pages/cart/cart'
-		})
+	// 点击底部右侧商品导航按钮的回调
+	const buttonClick = (e) => {
+		// 点击加入购物车
+		if (e.content.text === '加入购物车') {
+			// 添加到购物车
+			// {goods_id, goods_name, goods_price, goods_count, goods_small_logo, goods_state}
+			const goodsObj = {
+				goods_id: goodsInfo.value.goods_id,
+				goods_name: goodsInfo.value.goods_name,
+				goods_price: goodsInfo.value.goods_price,
+				goods_count: 1,
+				goods_small_logo: goodsInfo.value.goods_small_logo,
+				goods_state: true
+			}
+			useCart.addCart(goodsObj)
+		}
+		// 点击立即购买
+		if (e.content.text === '立即购买') {
+			// 清空购物车
+			useCart.clear()
+		}
+	}
+	// 点击底部左侧按钮的回调
+	const onClick = (e) => {
+		// 点击购物车
+		if (e.content.text === '购物车') {
+			// 跳转到购物车页面
+			uni.switchTab({
+				url: '/pages/cart/cart'
+			})
+		}
 	}
 	onLoad((options) => {
 		// 获取商品 id
@@ -68,6 +100,7 @@
 </script>
 
 <template>
+	<view class=""></view>
 	<view class="goods-detail-container">
 		<swiper
 			:indicator-dots="true"
@@ -100,15 +133,15 @@
 			<view class="freight">快递：免运费</view>
 		</view>
 		<!-- 商品介绍图片 -->
-		<rich-text :nodes="goodsInfo.goods_introduce"></rich-text>
+		<rich-text :nodes="goodsInfo?.goods_introduce"></rich-text>
 		<!-- 商品导航 -->
 		<view class="goods-carts">
 			<uni-goods-nav
 				:options="options"
 				:fill="true"
 				:button-group="buttonGroup"
-				@click="onClick"
 				@buttonClick="buttonClick"
+				@click="onClick"
 			/>
 		</view>
 	</view>

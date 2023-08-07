@@ -1,6 +1,14 @@
 <script setup>
 	import {} from 'vue'
-	import {} from '@dcloudio/uni-app'
+	import { onShow } from '@dcloudio/uni-app'
+	import { useCartStore } from '/store/useCart.js'
+	import { setBadge } from '/composable/useSetBadge.js'
+	const useCart = useCartStore()
+
+	onShow(() => {
+		// 设置购物车徽标
+		setBadge()
+	})
 </script>
 
 <template>cart</template>

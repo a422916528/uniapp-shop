@@ -22,11 +22,22 @@ uni.$showMsg = (title = '数据请求失败', duration = 1500) => {
 import {
 	createSSRApp
 } from 'vue'
+import * as Pinia from 'pinia'
 import App from './App.vue'
+import {
+	createUnistorage
+} from './uni_modules/pinia-plugin-unistorage'
+
 export function createApp() {
 	const app = createSSRApp(App)
+	const store = Pinia.createPinia()
+	// pinia 数据持久化注册
+	store.use(createUnistorage())
+	app.use(store)
+
 	return {
-		app
+		app,
+		Pinia
 	}
 }
 // #endif
