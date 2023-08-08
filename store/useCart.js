@@ -26,18 +26,46 @@ export const useCartStore = defineStore('cart', () => {
 	const clear = () => {
 		carts.value = []
 	}
+	// 改变商品勾选状态
+	const changeState = (goods) => {
+		const findResult = carts.value.find(item => item.goods_id === goods.goods_id)
+		if (findResult) {
+			findResult.goods_state = !goods.goods_state
+		}
+	}
+	// 删除商品
+	const removeGoods = (goods) => {
+		carts.value = carts.value.filter(item => item.goods_id !== goods.goods_id)
+	}
+	// 全选和全不选
+	const updateState = (state) => {
+		carts.value.forEach(item => item.goods_state = state)
+	}
 	// 计算购物车商品总数
 	const total = computed(() => {
 		return carts.value.reduce((amt, current) => {
 			return amt + current.goods_count
 		}, 0)
 	})
-
+	// 计算已勾选的商品总数
+	const checkedSum = computed(() => {
+		return carts.value.filter(item => item.goods_state).reduce((total, item) => total + item.goods_count, 0)
+	})
+	// 计算已勾选商品的总价
+	const checkedTotal = computed(() => {
+		return carts.value.filter(item => item.goods_state).reduce((total, item) => total + item.goods_count * item
+			.goods_price, 0)
+	})
 	return {
 		carts,
 		total,
+		checkedSum,
+		checkedTotal,
 		addCart,
-		clear
+		clear,
+		changeState,
+		removeGoods,
+		updateState
 	}
 }, {
 	unistorage: true

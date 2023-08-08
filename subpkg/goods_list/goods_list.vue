@@ -2,6 +2,7 @@
 	import { ref } from 'vue'
 	import { onLoad, onReachBottom, onPullDownRefresh } from '@dcloudio/uni-app'
 	import { reqGoodsList } from '/subpkg/subApi/goodsList/index.js'
+	import Goods from '/components/goods/index.vue'
 	// 请求服务器的参数
 	const params = ref({
 		query: '',
@@ -68,56 +69,10 @@
 
 <template>
 	<view class="goods-list">
-		<view
-			class="goods-item"
-			v-for="item in goodsList"
-			:key="item.goods_id"
-			@click="gotoDetail(item)"
-		>
-			<!-- 左侧图片 -->
-			<view class="goods-item-left">
-				<image :src="item.goods_small_logo || defaultImg" mode="" class="goods-img"></image>
-			</view>
-			<!-- 右侧描述 -->
-			<view class="goods-item-right">
-				<view class="goods-title">
-					{{ item.goods_name }}
-				</view>
-				<view class="goods-info">
-					<view class="goods-price">￥{{ item.goods_price }}</view>
-				</view>
-			</view>
-		</view>
+		<block v-for="item in goodsList" :key="item.goods_id">
+			<Goods :goodsItem="item" :defaultImg="defaultImg" @click="gotoDetail"></Goods>
+		</block>
 	</view>
 </template>
 
-<style lang="scss" scoped>
-	.goods-item {
-		display: flex;
-		padding: 10 5px;
-		border-bottom: 1px solid #f0f0f0;
-		.goods-item-left {
-			.goods-img {
-				width: 100px;
-				height: 100px;
-				display: block;
-			}
-		}
-		.goods-item-right {
-			display: flex;
-			flex-direction: column;
-			justify-content: space-between;
-			margin-left: 5px;
-			padding: 10px 0;
-			.goods-title {
-				font-size: 13px;
-			}
-			.goods-info {
-				.goods-price {
-					font-size: 16px;
-					color: #c00000;
-				}
-			}
-		}
-	}
-</style>
+<style lang="scss" scoped></style>

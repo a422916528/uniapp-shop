@@ -133,7 +133,9 @@
 			<view class="freight">快递：免运费</view>
 		</view>
 		<!-- 商品介绍图片 -->
-		<rich-text :nodes="goodsInfo?.goods_introduce"></rich-text>
+		<block v-if="goodsInfo.goods_introduce">
+			<rich-text :nodes="goodsInfo.goods_introduce"></rich-text>
+		</block>
 		<!-- 商品导航 -->
 		<view class="goods-carts">
 			<uni-goods-nav

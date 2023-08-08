@@ -1,8 +1,9 @@
 <script setup>
 	import { getCateList } from '../../api/cate/index.js'
 	import { ref } from 'vue'
-	import { onReady } from '@dcloudio/uni-app'
+	import { onReady, onShow } from '@dcloudio/uni-app'
 	import mySearch from '../../components/search/search.vue'
+	import { setBadge } from '/composable/useSetBadge.js'
 	// 存储分类列表数据
 	const cateList = ref([])
 	// 存储二级分类数据
@@ -31,6 +32,9 @@
 	}
 	onReady(() => {
 		getCateListData()
+	})
+	onShow(() => {
+		setBadge()
 	})
 </script>
 

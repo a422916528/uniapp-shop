@@ -1,13 +1,12 @@
-<template>
-	<view>My</view>
-</template>
-
-<script>
-export default {
-	data() {
-		return {}
-	}
-}
+<script setup>
+	import {} from 'vue'
+	import { onShow } from '@dcloudio/uni-app'
+	import { setBadge } from '/composable/useSetBadge.js'
+	onShow(() => {
+		setBadge()
+	})
 </script>
 
-<style lang="scss"></style>
+<template>My</template>
+
+<style lang="scss" scoped></style>

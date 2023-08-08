@@ -1,9 +1,10 @@
 <script setup>
 	import request from '../../utils/request.js'
 	import { ref } from 'vue'
-	import { onReady } from '@dcloudio/uni-app'
+	import { onReady, onShow } from '@dcloudio/uni-app'
 	import { getSwiper, getCate, getFloor } from '../../api/home/index.js'
 	import mySearch from '../../components/search/search.vue'
+	import { setBadge } from '/composable/useSetBadge.js'
 
 	// 存储轮播图
 	const swiperList = ref([])
@@ -55,6 +56,9 @@
 		getNavList()
 		// 获取楼层数据
 		getFloorList()
+	})
+	onShow(() => {
+		setBadge()
 	})
 </script>
 
