@@ -6,9 +6,11 @@ import {
 	computed
 } from 'vue'
 
-export const useAddressStore = defineStore('address', () => {
+export const useUserStore = defineStore('user', () => {
 	// 存储用户姓名地址电话相关
 	const address = ref({})
+	// 存储 token
+	const token = ref('')
 	// 添加地址信息
 	const addAddressInfo = (addressObj) => {
 		address.value = addressObj
@@ -24,6 +26,7 @@ export const useAddressStore = defineStore('address', () => {
 	})
 	return {
 		address,
+		token,
 		shippingAddress,
 		addAddressInfo,
 	}

@@ -1,8 +1,8 @@
 <script setup>
 	import { ref, computed } from 'vue'
 	import {} from '@dcloudio/uni-app'
-	import { useAddressStore } from '/store/useAddress.js'
-	const addressStore = useAddressStore()
+	import { useUserStore } from '/store/useUser.js'
+	const userStore = useUserStore()
 	// 收货信息
 	const address = ref({})
 	// 点击收货地址的回调
@@ -11,28 +11,28 @@
 		// 选择了收货地址
 		if (res.errMsg === 'chooseAddress:ok') {
 			// 存储到 pinia 中
-			addressStore.addAddressInfo(res)
+			userStore.addAddressInfo(res)
 		}
 	}
 </script>
 
 <template>
 	<!-- 选择收货地址 -->
-	<view class="address-box" v-if="!addressStore.address.provinceName">
+	<view class="address-box" v-if="!userStore.address.provinceName">
 		<button type="primary" size="mini" @click="chooseAddress">请选择收货地址+</button>
 	</view>
 	<!-- 展示收货信息 -->
 	<view class="address-info" v-else @click="chooseAddress">
 		<view class="row1">
-			<view class="row1-lf">收货人：{{ addressStore.address.userName }}</view>
+			<view class="row1-lf">收货人：{{ userStore.address.userName }}</view>
 			<view class="row-rt">
-				<view class="phone">电话：{{ addressStore.address.telNumber }}</view>
+				<view class="phone">电话：{{ userStore.address.telNumber }}</view>
 				<uni-icons type="arrowright" size="16"></uni-icons>
 			</view>
 		</view>
 		<view class="row2">
 			<view class="row2-address-text">收货地址：</view>
-			<view class="row2-address-info">{{ addressStore.shippingAddress || '' }}</view>
+			<view class="row2-address-info">{{ userStore.shippingAddress || '' }}</view>
 		</view>
 	</view>
 	<!-- 底部边框线 -->

@@ -2,8 +2,9 @@
 	import { computed } from 'vue'
 	import {} from '@dcloudio/uni-app'
 	import { useCartStore } from '/store/useCart.js'
+	import { useUserStore } from '../../store/useUser.js'
 	const cartStore = useCartStore()
-
+	const userStore = useUserStore()
 	// 计算全选按钮的勾选状态
 	const isFullCheck = computed(() => {
 		return cartStore.carts.every((item) => item.goods_state)
@@ -11,6 +12,12 @@
 	// 点击全选按钮
 	const fullCheck = () => {
 		cartStore.updateState(!isFullCheck.value)
+	}
+	// 点击结算按钮的回调
+	const settle = () => {
+		if (!cartStore.checkedSum) return uni.$showMsg('请勾选商品')
+		if (!userStore.address) return uni.$showMsg('请选择收货地址')
+		if (!userStore.token) return uni.$showMsg('请先登录')
 	}
 </script>
 
@@ -29,7 +36,7 @@
 			<text class="settle-text">￥{{ cartStore.checkedTotal.toFixed(2) }}</text>
 		</view>
 		<!-- 结算 -->
-		<view class="settle-rt">结算({{ cartStore.checkedSum }})</view>
+		<view class="settle-rt" @click="settle">结算({{ cartStore.checkedSum }})</view>
 	</view>
 </template>
 
